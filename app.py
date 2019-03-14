@@ -53,10 +53,27 @@ def articles():
     cur.close()
 
 
-# Article
+# Single Article
 @app.route('/article/<string:id>/')
 def article(id):
-    return render_template('article.html', id=id)
+
+     # Create Cursor
+    cur = mysql.connection.cursor()
+
+    # Get article
+    result = cur.execute("SELECT * FROM articles WHERE id = %s", [id])
+
+    article = cur.fetchone()
+
+    if result > 0:
+        return render_template('article.html', article=article)
+    else:
+        msg = 'No Articles Found'
+        return render_template('articles.html', msg=msg)
+
+    # Close Connection
+    cur.close()
+
 
 # Register Form Class
 
